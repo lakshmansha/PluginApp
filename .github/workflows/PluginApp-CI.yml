@@ -45,7 +45,7 @@ jobs:
       uses: canastro/copy-action@0.0.2
       with:
         # Source file
-        source: platforms/android/app/build/outputs/apk/debug/*
+        source: platforms/android/app/build/outputs/apk/**/*.apk
         # Target file
         target: path/to/artifact/APK
 
