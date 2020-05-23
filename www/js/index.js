@@ -73,7 +73,7 @@ var app = {
                             }
                         } else {
                             message = "Unable to call Error:" + err;
-                        }    
+                        } 
                         
                         AppHelper.alert(message);
                     },
