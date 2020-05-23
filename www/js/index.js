@@ -101,46 +101,37 @@ var app = {
             Mobile = `+91${Mobile}`;
         }
 
-        AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            var IsSpeaker = 'false';
-            if (res === 1) {         
-                IsSpeaker = 'true';     
-            }
-
-            if (app.IsDefined(cordova.plugins.phonedialer)) {
-                cordova.plugins.phonedialer.call(
-                    Mobile,
-                    (err) => {
-                        if (err === "OK") {
-                            message = "Call Initiated";
-                        } else if (err !== "OK") {
-                            message = "Unable to call Error:" + err;
-                            if (err === "empty") {
-                                message = "Unknown phone number";
-                            } else {
-                                console.log("Dialer error:" + err);
-                                message = "Unable to call Error:" + err;
-                            }
+        if (app.IsDefined(cordova.plugins.phonedialer)) {
+            cordova.plugins.phonedialer.dial(
+                Mobile,
+                (err) => {
+                    if (err === "OK") {
+                        message = "Call Initiated";
+                    } else if (err !== "OK") {
+                        message = "Unable to call Error:" + err;
+                        if (err === "empty") {
+                            message = "Unknown phone number";
                         } else {
+                            console.log("Dialer error:" + err);
                             message = "Unable to call Error:" + err;
-                        }    
-                        
-                        AppHelper.alert(message);
-                    },
-                    (success) => {
-                        if (success === "OK") {
-                            message = "Call Initiated";
-                        } else {
-                            message = "Unable to call Error:" + success;
-                        }      
-                        
-                        console.log(message);                                               
-                    },
-                    IsSpeaker
-                );
-            }
-        });
-
+                        }
+                    } else {
+                        message = "Unable to call Error:" + err;
+                    }    
+                    
+                    AppHelper.alert(message);
+                },
+                (success) => {
+                    if (success === "OK") {
+                        message = "Call Initiated";
+                    } else {
+                        message = "Unable to call Error:" + success;
+                    }      
+                    
+                    console.log(message);                                               
+                }
+            );
+        }
 
     },
     IsDefined: (value) => {
