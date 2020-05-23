@@ -37,7 +37,7 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Cordova Prepare for Android
       run: |
-        npm run cordova prepare android,
+        npm run cordova platform add android,
         npm run cordova build android.
         
     - name: Copy APK to Artifact
