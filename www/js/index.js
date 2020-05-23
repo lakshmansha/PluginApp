@@ -52,18 +52,14 @@ var app = {
         }
 
         AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            var IsSpeaker = false;
+            var IsSpeaker = 'false';
             if (res === 1) {         
-                IsSpeaker = true;       
+                IsSpeaker = 'true';       
             }
 
             if (app.IsDefined(cordova.plugins.phonedialer)) {
                 cordova.plugins.phonedialer.call(
                     Mobile,
-                    (result) => {
-                        message = "Call Initiated";
-                        console.log(result);                       
-                    },
                     (err) => {
                         if (err === "OK") {
                             message = "Call Initiated";
@@ -72,13 +68,23 @@ var app = {
                             if (err === "empty") {
                                 message = "Unknown phone number";
                             } else {
-                                log.error("Dialer error:" + err);
+                                console.log("Dialer error:" + err);
                                 message = "Unable to call Error:" + err;
                             }
                         } else {
                             message = "Unable to call Error:" + err;
-                        }
+                        }    
+                        
                         AppHelper.alert(message);
+                    },
+                    (success) => {
+                        if (success === "OK") {
+                            message = "Call Initiated";
+                        } else {
+                            message = "Unable to call Error:" + success;
+                        }      
+                        
+                        console.log(message);                                               
                     },
                     IsSpeaker
                 );
@@ -96,18 +102,14 @@ var app = {
         }
 
         AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            var IsSpeaker = false;
+            var IsSpeaker = 'false';
             if (res === 1) {         
-                IsSpeaker = true;       
+                IsSpeaker = 'true';     
             }
 
             if (app.IsDefined(cordova.plugins.phonedialer)) {
                 cordova.plugins.phonedialer.call(
                     Mobile,
-                    (result) => {
-                        message = "Call Initiated";
-                        console.log(result);                       
-                    },
                     (err) => {
                         if (err === "OK") {
                             message = "Call Initiated";
@@ -116,13 +118,23 @@ var app = {
                             if (err === "empty") {
                                 message = "Unknown phone number";
                             } else {
-                                log.error("Dialer error:" + err);
+                                console.log("Dialer error:" + err);
                                 message = "Unable to call Error:" + err;
                             }
                         } else {
                             message = "Unable to call Error:" + err;
-                        }
+                        }    
+                        
                         AppHelper.alert(message);
+                    },
+                    (success) => {
+                        if (success === "OK") {
+                            message = "Call Initiated";
+                        } else {
+                            message = "Unable to call Error:" + success;
+                        }      
+                        
+                        console.log(message);                                               
                     },
                     IsSpeaker
                 );
