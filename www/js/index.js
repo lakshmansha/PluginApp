@@ -52,36 +52,80 @@ var app = {
         }
 
         AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            if (res === 1) {
-                if (app.IsDefined(cordova.plugins.phonedialer)) {
-                    cordova.plugins.phonedialer.call(
-                        Mobile,
-                        (result) => {
+            var IsSpeaker = false;
+            if (res === 1) {         
+                IsSpeaker = true;       
+            }
+
+            if (app.IsDefined(cordova.plugins.phonedialer)) {
+                cordova.plugins.phonedialer.call(
+                    Mobile,
+                    (result) => {
+                        message = "Call Initiated";
+                        console.log(result);                       
+                    },
+                    (err) => {
+                        if (err === "OK") {
                             message = "Call Initiated";
-                            log.info(result);
-                            observer.next(message);
-                            observer.complete();
-                        },
-                        (err) => {
-                            if (err === "OK") {
-                                message = "Call Initiated";
-                            } else if (err !== "OK") {
-                                message = "Unable to call Error:" + err;
-                                if (err === "empty") {
-                                    message = "Unknown phone number";
-                                } else {
-                                    log.error("Dialer error:" + err);
-                                    message = "Unable to call Error:" + err;
-                                }
+                        } else if (err !== "OK") {
+                            message = "Unable to call Error:" + err;
+                            if (err === "empty") {
+                                message = "Unknown phone number";
                             } else {
+                                log.error("Dialer error:" + err);
                                 message = "Unable to call Error:" + err;
                             }
-                            observer.next(message);
-                            observer.complete();
-                        },
+                        } else {
+                            message = "Unable to call Error:" + err;
+                        }
+                        AppHelper.alert(message);
+                    },
+                    IsSpeaker
+                );
+            }
+        });
+    },
+    PhoneDial: () => {
+        let Mobile = document.getElementById('txtMobileNo').value;
 
-                    );
-                }
+        if (!app.IsValid(Mobile)) {
+            AppHelper.alert('Please Enter the Valid Mobile No.');
+            return;
+        } else {
+            Mobile = `+91${Mobile}`;
+        }
+
+        AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
+            var IsSpeaker = false;
+            if (res === 1) {         
+                IsSpeaker = true;       
+            }
+
+            if (app.IsDefined(cordova.plugins.phonedialer)) {
+                cordova.plugins.phonedialer.call(
+                    Mobile,
+                    (result) => {
+                        message = "Call Initiated";
+                        console.log(result);                       
+                    },
+                    (err) => {
+                        if (err === "OK") {
+                            message = "Call Initiated";
+                        } else if (err !== "OK") {
+                            message = "Unable to call Error:" + err;
+                            if (err === "empty") {
+                                message = "Unknown phone number";
+                            } else {
+                                log.error("Dialer error:" + err);
+                                message = "Unable to call Error:" + err;
+                            }
+                        } else {
+                            message = "Unable to call Error:" + err;
+                        }
+                        AppHelper.alert(message);
+                    },
+                    IsSpeaker
+                );
             }
         });
 
