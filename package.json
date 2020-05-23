@@ -1,0 +1,35 @@
+{
+  "name": "com.lakshman.pluginapp",
+  "displayName": "PluginApp",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cordova": "cordova"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova": "^9.0.0",
+    "cordova-plugin-whitelist": "^1.3.4"
+  },
+  "dependencies": {
+    "cordova-android": "^8.1.0",
+    "cordova-plugin-dialogs": "^2.0.2",
+    "cordova-plugin-phone-call": "git+https://github.com/lakshmansha/cordova-plugin-phone-call.git#feature/speaker-on"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-dialogs": {},
+      "cordova-plugin-phone-call": {}
+    },
+    "platforms": [
+      "android"
+    ]
+  }
+}
