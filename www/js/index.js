@@ -43,6 +43,7 @@ var app = {
     },
     PhoneCall: () => {
         let Mobile = document.getElementById('txtMobileNo').value;
+        document.getElementById('displayError').innerHTML = "";
 
         if (!app.IsValid(Mobile)) {
             AppHelper.alert('Please Enter the Valid Mobile No.');
@@ -52,14 +53,20 @@ var app = {
         }
 
         AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            var IsSpeaker = false;
+            var IsSpeaker = 'false';
             if (res === 1) {         
-                IsSpeaker = true;       
+                IsSpeaker = 'true';       
             }
 
             if (app.IsDefined(cordova.plugins.phonedialer)) {
                 cordova.plugins.phonedialer.call(
                     Mobile,
+                    (success) => {
+                        if (success === "OK") {
+                            message = "Call Initiated";                            
+                        }
+                        console.log(message);                                               
+                    },
                     (err) => {
                         if (err === "OK") {
                             message = "Call Initiated";
@@ -75,34 +82,16 @@ var app = {
                             message = "Unable to call Error:" + err;
                         } 
 
-                        // document.getElementById('displayError').innerHTML = message;
-                        
                         AppHelper.alert(message);
                     },
-                    (success) => {
-                        if (success === "OK") {
-                            message = "Call Initiated";
-                            if (IsSpeaker) {
-                                cordova.plugins.phonedialer.speakerOn(
-                                    (error) => {
-                                        message = "Unable to Enable Speaker. Error:" + err;
-                                        document.getElementById('displayError').innerHTML = message;
-                                    }, 
-                                    (success) => {
-                                        message = "Speaker-On Successfully";
-                                        document.getElementById('displayError').innerHTML = message;
-                                    }
-                                );    
-                            }
-                        }                        
-                        console.log(message);                                               
-                    }
+                    IsSpeaker
                 );
             }
         });
     },
     PhoneDial: () => {
         let Mobile = document.getElementById('txtMobileNo').value;
+        document.getElementById('displayError').innerHTML = "";
 
         if (!app.IsValid(Mobile)) {
             AppHelper.alert('Please Enter the Valid Mobile No.');
@@ -114,6 +103,15 @@ var app = {
         if (app.IsDefined(cordova.plugins.phonedialer)) {
             cordova.plugins.phonedialer.dial(
                 Mobile,
+                (success) => {
+                    if (success === "OK") {
+                        message = "Call Initiated";
+                    } else {
+                        message = "Unable to call Error:" + success;
+                    }      
+
+                    document.getElementById('displayError').innerHTML = message;
+                },
                 (err) => {
                     if (err === "OK") {
                         message = "Call Initiated";
@@ -130,15 +128,6 @@ var app = {
                     }    
                     
                     AppHelper.alert(message);
-                },
-                (success) => {
-                    if (success === "OK") {
-                        message = "Call Initiated";
-                    } else {
-                        message = "Unable to call Error:" + success;
-                    }      
-                    
-                    console.log(message);                                               
                 }
             );
         }
