@@ -74,19 +74,28 @@ var app = {
                         } else {
                             message = "Unable to call Error:" + err;
                         } 
+
+                        // document.getElementById('displayError').innerHTML = message;
                         
                         AppHelper.alert(message);
                     },
                     (success) => {
                         if (success === "OK") {
                             message = "Call Initiated";
-                        } else {
-                            message = "Unable to call Error:" + success;
-                        }      
-                        
+                            cordova.plugins.phonedialer.speakerOn(
+                                (error) => {
+                                    message = "Unable to Enable Speaker. Error:" + err;
+                                    document.getElementById('displayError').innerHTML = message;
+                                }, 
+                                (success) => {
+                                    message = "Speaker-On Successfully";
+                                    document.getElementById('displayError').innerHTML = message;
+                                }
+                            );
+
+                        }                        
                         console.log(message);                                               
-                    },
-                    IsSpeaker
+                    }
                 );
             }
         });
