@@ -52,9 +52,9 @@ var app = {
         }
 
         AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            var IsSpeaker = 'false';
+            var IsSpeaker = false;
             if (res === 1) {         
-                IsSpeaker = 'true';       
+                IsSpeaker = true;       
             }
 
             if (app.IsDefined(cordova.plugins.phonedialer)) {
@@ -82,17 +82,18 @@ var app = {
                     (success) => {
                         if (success === "OK") {
                             message = "Call Initiated";
-                            cordova.plugins.phonedialer.speakerOn(
-                                (error) => {
-                                    message = "Unable to Enable Speaker. Error:" + err;
-                                    document.getElementById('displayError').innerHTML = message;
-                                }, 
-                                (success) => {
-                                    message = "Speaker-On Successfully";
-                                    document.getElementById('displayError').innerHTML = message;
-                                }
-                            );
-
+                            if (IsSpeaker) {
+                                cordova.plugins.phonedialer.speakerOn(
+                                    (error) => {
+                                        message = "Unable to Enable Speaker. Error:" + err;
+                                        document.getElementById('displayError').innerHTML = message;
+                                    }, 
+                                    (success) => {
+                                        message = "Speaker-On Successfully";
+                                        document.getElementById('displayError').innerHTML = message;
+                                    }
+                                );    
+                            }
                         }                        
                         console.log(message);                                               
                     }
