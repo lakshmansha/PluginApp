@@ -19,7 +19,13 @@
 var app = {
     // Application Constructor
     initialize: function () {
+        app.Reset();
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
+    CarouselInit: () => {
+        $('.carousel').carousel({
+            interval: 2000
+        });
     },
 
     // deviceready Event Handler
@@ -27,6 +33,10 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function () {
+        if (navigator["splashscreen"]) {
+            navigator.splashscreen.hide();
+        }
+
         this.receivedEvent('deviceready');
     },
 
@@ -41,50 +51,120 @@ var app = {
 
         console.log('Received Event: ' + id);
     },
+    Validation: () => {
+        var isValid = false;
+        var forms = document.getElementsByClassName('needs-validation')[0];
+        if (forms.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            isValid = true;
+        }
+
+        forms.classList.add('was-validated');
+
+        return isValid;
+    },
+    Reset: () => {
+        document.getElementById('alertDanger').innerHTML = "";
+        document.getElementById('alertSuccess').innerHTML = "";
+        document.getElementById('alertDanger').style.display = "none";
+        document.getElementById('alertSuccess').style.display = "none";
+        document.getElementById('txtMobileNo').value = '';
+        document.getElementById('chkInSpeaker').checked = false;
+    },
     PhoneCall: () => {
         let Mobile = document.getElementById('txtMobileNo').value;
+        document.getElementById('alertDanger').innerHTML = "";
+        document.getElementById('alertSuccess').innerHTML = "";
+        document.getElementById('alertDanger').style.display = "none";
+        document.getElementById('alertSuccess').style.display = "none";
 
-        if (!app.IsValid(Mobile)) {
-            AppHelper.alert('Please Enter the Valid Mobile No.');
+        var checkBox = document.getElementById("chkInSpeaker");
+
+        if (!app.Validation()) {
             return;
         } else {
             Mobile = `+91${Mobile}`;
         }
 
-        AppHelper.OnConfirm('Call with Speaker', ["OK", "Cancel"], (res) => {
-            if (res === 1) {
-                if (app.IsDefined(cordova.plugins.phonedialer)) {
-                    cordova.plugins.phonedialer.call(
-                        Mobile,
-                        (result) => {
-                            message = "Call Initiated";
-                            log.info(result);
-                            observer.next(message);
-                            observer.complete();
-                        },
-                        (err) => {
-                            if (err === "OK") {
-                                message = "Call Initiated";
-                            } else if (err !== "OK") {
-                                message = "Unable to call Error:" + err;
-                                if (err === "empty") {
-                                    message = "Unknown phone number";
-                                } else {
-                                    log.error("Dialer error:" + err);
-                                    message = "Unable to call Error:" + err;
-                                }
-                            } else {
-                                message = "Unable to call Error:" + err;
-                            }
-                            observer.next(message);
-                            observer.complete();
-                        },
+        var IsSpeaker = checkBox.checked == true ? 'true' : 'false';
 
-                    );
+        if (app.IsDefined(cordova.plugins.phonedialer)) {
+            cordova.plugins.phonedialer.call(
+                Mobile,
+                (success) => {
+                    if (success === "OK") {
+                        message = "Call Initiated";
+                        document.getElementById('alertSuccess').innerHTML = message;
+                        document.getElementById('alertSuccess').style.display = "block";
+                    } else {
+                        message = "Unable to call Error:" + success;
+                        document.getElementById('alertDanger').innerHTML = message;
+                        document.getElementById('alertDanger').style.display = "block";
+                    }
+                },
+                (err) => {
+                    if (err !== "OK") {
+                        message = "Unable to call Error:" + err;
+                        if (err === "empty") {
+                            message = "Unknown phone number";
+                        } else {
+                            console.log("Dialer error:" + err);
+                            message = "Unable to call Error:" + err;
+                        }
+
+                        document.getElementById('alertDanger').innerHTML = message;
+                        document.getElementById('alertDanger').style.display = "block";
+                    }
+                },
+                IsSpeaker
+            );
+        }
+    },
+    PhoneDial: () => {
+        let Mobile = document.getElementById('txtMobileNo').value;
+        document.getElementById('alertDanger').innerHTML = "";
+        document.getElementById('alertSuccess').innerHTML = "";
+        document.getElementById('alertDanger').style.display = "none";
+        document.getElementById('alertSuccess').style.display = "none";
+
+        if (!app.Validation()) {
+            return;
+        } else {
+            Mobile = `+91${Mobile}`;
+        }
+
+        if (app.IsDefined(cordova.plugins.phonedialer)) {
+            cordova.plugins.phonedialer.dial(
+                Mobile,
+                (success) => {
+                    if (success === "OK") {
+                        message = "Call Initiated";
+                        document.getElementById('alertSuccess').innerHTML = message;
+                        document.getElementById('alertSuccess').style.display = "block";
+                    } else {
+                        message = "Unable to call Error:" + success;
+                        document.getElementById('alertDanger').innerHTML = message;
+                        document.getElementById('alertDanger').style.display = "block";
+                    }
+                },
+                (err) => {
+                    if (err !== "OK") {
+                        message = "Unable to call Error:" + err;
+                        if (err === "empty") {
+                            message = "Unknown phone number";
+                        } else {
+                            console.log("Dialer error:" + err);
+                            message = "Unable to call Error:" + err;
+                        }
+
+                        document.getElementById('alertDanger').innerHTML = message;
+                        document.getElementById('alertDanger').style.display = "block";
+                    }
                 }
-            }
-        });
-
+            );
+        }
 
     },
     IsDefined: (value) => {
