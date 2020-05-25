@@ -49,8 +49,10 @@ jobs:
         # Target file
         target: path/to/artifact/APK
       
-    - name: Rename File
-    - run: cd path/to/artifact/APK  
+    - name: Get to Directory      
+      run: cd path/to/artifact/APK  
+
+    - name: Rename APK To "AppPublish.apk"
     - run: Rename-Item -Path $file.name[0] -NewName "AppPublish.apk"
       shell: pwsh
    
