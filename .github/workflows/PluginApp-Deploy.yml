@@ -42,6 +42,7 @@ jobs:
       run: mkdir -p path/to/artifact/APK
         
     - name: Copy file
+      id: copyfile
       uses: canastro/copy-action@0.0.2
       with:
         # Source file
@@ -49,16 +50,17 @@ jobs:
         # Target file
         target: path/to/artifact/APK
       
-    - name: Get to Directory      
-      run: cd path/to/artifact/APK  
 
-    - name: Rename APK To "AppPublish.apk"      
-      shell: pwsh
+    - name: Rename APK To "AppPublish.apk"   
+      if: steps.copyfile.conclusion == 'success'
+      shell: pwsh      
+      working-directory: path/to/artifact/APK
       run: |
         $file=Get-Item "*.apk"
         Rename-Item -Path $file.name -NewName "AppPublish.apk"
    
     - name: Upload Diawi
+      if: steps.copyfile.conclusion == 'success'
       uses: rnkdsh/action-upload-diawi@v1.1.0
       with:
         # Diawi API access token
