@@ -48,13 +48,18 @@ jobs:
         source: platforms/android/app/build/outputs/apk/**/*.apk
         # Target file
         target: path/to/artifact/APK
-
+      
+    - name: Rename File
+    - run: cd path/to/artifact/APK  
+    - run: Rename-Item -Path $file.name[0] -NewName "AppPublish.apk"
+      shell: pwsh
+   
     - name: Upload Diawi
       uses: rnkdsh/action-upload-diawi@v1.1.0
       with:
         # Diawi API access token
         token: ${{ secrets.DIAWI_TOKEN }}
         # APK file to upload on Diawi
-        file: path/to/artifact/APK/*.apk   
+        file: path/to/artifact/APK/AppPublish.apk   
         # Email addresses Diawi will send the result to (up to 5 separated by commas for starter/premium/enterprise accounts, 1 for free accounts)
         recipients: ${{ secrets.DIAWI_EMAILIDS }}   
