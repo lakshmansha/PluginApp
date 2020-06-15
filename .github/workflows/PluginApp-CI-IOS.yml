@@ -7,7 +7,8 @@ name: PluginApp-CI
 on:  
   push:
     branches:
-      - feature/*
+      - feature/*,
+      - develop
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,5 +36,5 @@ jobs:
     - name: Cordova Prepare for ios
       run: npm run cordova platform add ios@4.5.4
     
-    - name: Cordova Build for Android
+    - name: Cordova Build for iOS
       run: npm run cordova build ios        
